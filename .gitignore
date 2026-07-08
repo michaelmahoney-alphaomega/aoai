@@ -1,0 +1,9 @@
+*.csv
+*.log
+.vscode
+aolog.egg-info
+build
+__pycache__
+logs
+env
+build
