@@ -41,11 +41,57 @@ config = {
     }
 }
 
+def _handle_csv(data_file_path, csv_config, logger: AoLog):
+    logger.reset_errors()
+    data = pd.DataFrame()
+    config = {
+
+    }
+
+    return data, logger
+    
+def _handle_excel(data_file_path, excel_config, logger: AoLog):
+    logger.reset_errors()
+    data = pd.DataFrame()
+    config = {
+
+    }
+
+    return data, logger
+
+def _handle_json(data_file_path, json_config, logger: AoLog):
+    logger.reset_errors()
+    data = pd.DataFrame()
+    config = {
+
+    }
+
+    return data, logger
+
+def _handle_xml(data_file_path, xml_config, logger: AoLog):
+    logger.reset_errors()
+    data = pd.DataFrame()
+    config = {
+
+    }
+
+    return data, logger
+
+def _handle_html(data_file_path, htmlConfig, logger: AoLog):
+    logger.reset_errors()
+    data = pd.DataFrame()
+    config = {
+
+    }
+
+    return data, logger
+
 def ai_data_prep(data_set, logger: AoLog, config: dict):
     logger.reset_errors()
     data = pd.DataFrame()
 
     if isinstance(data_set, str):
+        data_file_path = data_set
         logger.log_info(f"Detected string input for 'data_set' treating as a file path.")
         allowedExtensions = ["csv", "xlsx", "json", "xml", "html"]            
         logger.log_debug(f"Allowed list of file extensions: {allowedExtensions}")
@@ -66,26 +112,32 @@ def ai_data_prep(data_set, logger: AoLog, config: dict):
 
         else:
             logger.log_error(f"Invalid file extension detected: {fileExtension}", f"The only allowed file extensions are {allowedExtensions}")
-            return data
+            return data, logger
         
         if fileExtension == "csv":
-            df = pd.read_csv(data_set)
+            csvConfig = config["csv"]
+            df, logger = _handle_csv(data_file_path, csvConfig, logger)
         
         elif fileExtension == "xlsx":
-            df = pd.read_excel(data_set)
+            excelConfig = config["excel"]
+            df, logger = _handle_csv(data_file_path, excelConfig, logger)
         
         elif fileExtension == "json":
-            df = pd.read_json(data_set)
+            jsonConfig = config["json"]
+            df, logger = _handle_json(data_file_path, jsonConfig, logger)
 
         elif fileExtension == "xml":
-            df = pd.read_xml(data_set)
+            xmlConfig = config["xml"]
+            df, logger = _handle_xml(data_file_path, xmlConfig, logger)
         
         elif fileExtension == "html":
-            df = pd.read_html(data_set)
+            htmlConfig = config["html"]
+            df, logger = _handle_html(data_file_path, htmlConfig, logger)
             
         else:
             logger.log_error(f"Unknown file extension. Please make sure the file is properly named with '.FILE_EXTENSION'", f"file name: {data_set}")
-            return data
+            return data, logger
+        
 
     elif isinstance(data_set, list):
         pass
@@ -98,6 +150,8 @@ def ai_data_prep(data_set, logger: AoLog, config: dict):
 
     else:
         pass
+    
+    return data, logger
 
 def create_predictive_neural_network(X_train, Y_train, logger: AoLog, config):
     logger.reset_errors()
